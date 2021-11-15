@@ -1,10 +1,10 @@
 import './App.css';
-import UserChart from './components/UserChart';
+import TransactionData from './Pages/TransactionData';
 
 function App() {
   return (
     <div className='App'>
-      <UserChart />
+      <TransactionData />
     </div>
   );
 }

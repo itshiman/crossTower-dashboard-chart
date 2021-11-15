@@ -5,15 +5,22 @@ const split = (date) => {
 const dataPreprocess = (data) => {
   if (data.data) {
     var dataArr = data.data.data;
-    var res = {};
+    var res = [{}, {}];
+
     dataArr.forEach((item) => {
-      var key = split(item.order_time);
-      res[key] ? (res[key] = res[key] + 1) : (res[key] = 1);
+      var key = '';
+      if (item.side === 'buy') {
+        key = split(item.order_time);
+        res[0][key] ? (res[0][key] = res[0][key] + 1) : (res[0][key] = 1);
+      } else {
+        key = split(item.order_time);
+        res[1][key] ? (res[1][key] = res[1][key] + 1) : (res[1][key] = 1);
+      }
     });
 
     return res;
   } else {
-    console.log(false);
+    return [];
   }
 };
 
