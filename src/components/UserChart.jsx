@@ -5,7 +5,7 @@ import Chart from "react-apexcharts";
 class UserChart extends Component {
 
   state = {
-    data: {},
+    // data: {},
     options: {
         chart: {
           id: "basic-bar"
