@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
 import dataPreprocess from '../utilities/dataPreprocess';
 import Chart from 'react-apexcharts';
+import DropDownMenu from './DropDownMenu';
 
 class BuySellMonthlyChart extends Component {
+  constructor(props) {
+    super(props);
+
+    this.toggle = this.toggle.bind(this);
+    this.selectItem = this.selectItem.bind(this);
+  }
   state = {
+    dropdownOpen: false,
+    dropdownItem: 'This Week',
     buySellData: false,
     options: {
       chart: {
@@ -17,7 +26,7 @@ class BuySellMonthlyChart extends Component {
         zoom: {
           enabled: true,
           type: 'y',
-          autoScaleXaxis: true,
+          autoScaleXaxis: false,
           zoomedArea: {
             fill: {
               color: '#90CAF9',
@@ -31,6 +40,7 @@ class BuySellMonthlyChart extends Component {
           },
         },
       },
+
       responsive: [
         {
           breakpoint: 480,
@@ -76,11 +86,26 @@ class BuySellMonthlyChart extends Component {
     chartData: {},
   };
 
+  toggle(e) {
+    this.setState((prevState) => ({
+      dropdownOpen: !prevState.dropdownOpen,
+    }));
+  }
+
+  selectItem(item) {
+    if (item != this.state.dropdownItem) {
+      this.setState({
+        ...this.state,
+        dropdownItem: item,
+      });
+    }
+  }
+
   fetchBuySellDataMonthly = () => {
     const token =
       'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdG8rcmVwb3J0QGNyb3NzdG93ZXIuaW4iLCJBdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiQURNSU4ifV0sImlhdCI6MTYzMzk3NzUxNywiZXhwIjoxNzYwMjE5OTgxfQ.WpF1uV7dBHQRdz0z2B5i60-4zwWuX7Ezo7H-tcR3wIl7A8czZv0sm3aubpX3PIuFzb3w5Opc75x0FKI9jL0Gew';
     fetch(
-      'https://api.crosstower.in/transaction/admin/orders/list?pagination_type=page&page=1&limit=1100000',
+      'https://api.crosstower.in/transaction/admin/orders/list?pagination_type=page&page=1&limit=1100',
       {
         headers: {
           Authorization: 'Bearer ' + token,
@@ -128,17 +153,25 @@ class BuySellMonthlyChart extends Component {
     return (
       <div>
         {this.state.buySellData ? (
-          <div className='row'>
-            <div className='mixed-chart' style={{ content: 'overflow' }}>
-              <Chart
-                options={this.state.options}
-                series={this.state.series}
-                type='bar'
-                toolbar={{ show: true }}
-                height='600px'
-              />
+          <>
+            <DropDownMenu
+              dropdownOpen={this.state.dropdownOpen}
+              dropdownItem={this.state.dropdownItem}
+              toggle={this.toggle}
+              selectItem={this.selectItem}
+            />
+            <div className='row'>
+              <div className='mixed-chart' style={{ content: 'overflow' }}>
+                <Chart
+                  options={this.state.options}
+                  series={this.state.series}
+                  type='line'
+                  toolbar={{ show: true }}
+                  height='600px'
+                />
+              </div>
             </div>
-          </div>
+          </>
         ) : (
           <h3>Loading Buy Sell Chart for a Month...</h3>
         )}

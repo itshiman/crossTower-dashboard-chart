@@ -5,7 +5,7 @@ import UserChart from './components/UserChart';
 
 function App() {
   return (
-    <div className='App'>
+    <div className='container'>
       <TransactionData />
       {/* <UserChart /> */}
       {/* <BuySell/> */}

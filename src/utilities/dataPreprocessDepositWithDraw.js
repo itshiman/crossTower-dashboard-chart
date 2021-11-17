@@ -6,8 +6,8 @@ const dataPreprocess = (depositData, withdrawData) => {
   if (depositData.data) {
     var depositDataArr = depositData.data.data;
     var withdrawDataArr = withdrawData.data.data;
-    console.log(depositDataArr);
-    console.log(withdrawDataArr);
+    // console.log(depositDataArr);
+    // console.log(withdrawDataArr);
     var res = [{}, {}];
     depositDataArr.forEach((item) => {
       var key = '';
