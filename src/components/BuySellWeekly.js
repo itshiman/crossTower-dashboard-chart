@@ -3,6 +3,7 @@ import dataPreprocess from '../utilities/dataPreprocess';
 import ReactApexChart from 'react-apexcharts';
 import DropDownMenu from './DropDownMenu';
 import dateConverter from '../utilities/dateConverter';
+import { Spinner } from 'reactstrap';
 
 class BuySellWeeklyChart extends Component {
   constructor(props) {
@@ -38,16 +39,13 @@ class BuySellWeeklyChart extends Component {
             blur: 10,
             opacity: 0.2,
           },
-          selection: {
-            enabled: true,
-          },
+
           toolbar: {
             show: true,
             offsetX: 0,
             offsetY: 0,
             tools: {
               download: true,
-              selection: true,
               zoom: true,
               zoomin: true,
               zoomout: true,
@@ -90,16 +88,11 @@ class BuySellWeeklyChart extends Component {
             },
           },
         ],
-        plotOptions: {
-          bar: {
-            horizontal: false,
-          },
-        },
         stroke: {
           width: 3,
         },
         title: {
-          text: 'Buy Sell Chart for week',
+          text: 'Buy Sell Chart for Last Week',
         },
         xaxis: {
           type: 'datetime',
@@ -184,7 +177,11 @@ class BuySellWeeklyChart extends Component {
         options: {
           ...this.state.options,
           ...{
+            title: {
+              text: `Buy Sell Chart for ${this.state.dropdownItem}`,
+            },
             xaxis: {
+              type: 'datetime',
               categories: categories,
             },
           },
@@ -244,7 +241,11 @@ class BuySellWeeklyChart extends Component {
             options: {
               ...this.state.options,
               ...{
+                title: {
+                  text: `Buy Sell Chart for ${this.state.dropdownItem}`,
+                },
                 xaxis: {
+                  type: 'datetime',
                   categories: categories,
                 },
               },
@@ -285,7 +286,11 @@ class BuySellWeeklyChart extends Component {
             options: {
               ...this.state.options,
               ...{
+                title: {
+                  text: `Buy Sell Chart for ${this.state.dropdownItem}`,
+                },
                 xaxis: {
+                  type: 'datetime',
                   categories: categories,
                 },
               },
@@ -324,7 +329,16 @@ class BuySellWeeklyChart extends Component {
             </div>
           </>
         ) : (
-          <h3>Loading Buy Sell Chart for a Week...</h3>
+          <div style={{ height: '400px', padding: '120px' }}>
+            <div className=' d-flex justify-content-center'>
+              <Spinner animation='border' role='status' aria-hidden='true' />
+            </div>
+            <div className=' d-flex justify-content-center'>
+              <span>
+                Loading Buy Sell Chart for {this.state.dropdownItem}...
+              </span>
+            </div>
+          </div>
         )}
       </div>
     );
