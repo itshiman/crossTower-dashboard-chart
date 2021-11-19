@@ -15,9 +15,9 @@ class DropDownMenu extends React.Component {
           <DropdownMenu>
             <DropdownItem
               onClick={() => {
-                this.props.selectItem('Last Week');
+                this.props.selectItem('Past 7 Days');
               }}>
-              Last Week
+              Past 7 Days
             </DropdownItem>
             <DropdownItem divider />
             <DropdownItem

@@ -3,7 +3,11 @@ import dataPreprocess from '../utilities/dataPreprocess';
 import ReactApexChart from 'react-apexcharts';
 import DropDownMenu from './DropDownMenu';
 import dateConverter from '../utilities/dateConverter';
-import { Spinner } from 'reactstrap';
+import { Button, Spinner } from 'reactstrap';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
+import { DateRangePicker } from 'react-date-range';
+import { addDays } from 'date-fns';
 
 class BuySellWeeklyChart extends Component {
   constructor(props) {
@@ -11,11 +15,24 @@ class BuySellWeeklyChart extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.selectItem = this.selectItem.bind(this);
+    this.showCalender = this.showCalender.bind(this);
+
+    this.setRange = this.setRange.bind(this);
+
     this.state = {
       dropdownOpen: false,
-      dropdownItem: 'This Week',
+      dropdownItem: 'Past 7 Days',
       buySellData: false,
       data: [],
+
+      showCalender: false,
+      ranges: [
+        {
+          startDate: new Date(),
+          endDate: new Date(),
+          key: 'selection',
+        },
+      ],
       series: [
         {
           name: 'buy',
@@ -92,7 +109,7 @@ class BuySellWeeklyChart extends Component {
           width: 3,
         },
         title: {
-          text: 'Buy Sell Chart for Last Week',
+          text: 'Buy Sell Chart for Last 7 Days',
         },
         xaxis: {
           type: 'datetime',
@@ -119,14 +136,14 @@ class BuySellWeeklyChart extends Component {
   }
 
   selectItem(item) {
-    if (item != this.state.dropdownItem) {
+    if (item !== this.state.dropdownItem) {
       this.setState(
         {
           ...this.state,
           dropdownItem: item,
         },
         () => {
-          if (item === 'Last Week') {
+          if (item === 'Past 7 Days') {
             this.setData();
           } else {
             var period = dateConverter(item);
@@ -144,15 +161,30 @@ class BuySellWeeklyChart extends Component {
       var end = '';
 
       if (period) {
+        period[0] = new Date(period[0]);
+        period[1] = new Date(period[1]);
+
+        period[0] = period[0].toISOString().split('T')[0];
+        period[1] = period[1].toISOString().split('T')[0];
+
         const dateArr = Object.keys(chartData[0]);
-        end =
-          dateArr.indexOf(period[0]) != -1
-            ? dateArr.indexOf(period[0]) + 1
-            : dateArr.indexOf(dateArr[dateArr.length - 1]) + 1;
-        start =
-          dateArr.indexOf(period[1]) != -1
-            ? dateArr.indexOf(period[1])
-            : dateArr.indexOf(dateArr[0]);
+
+        if (
+          dateArr.indexOf(period[0]) === -1 &&
+          dateArr.indexOf(period[1]) === -1
+        ) {
+          end = -1;
+          start = -1;
+        } else {
+          end =
+            dateArr.indexOf(period[0]) !== -1
+              ? dateArr.indexOf(period[0]) + 1
+              : dateArr.indexOf(dateArr[dateArr.length - 1]) + 1;
+          start =
+            dateArr.indexOf(period[1]) !== -1
+              ? dateArr.indexOf(period[1])
+              : dateArr.indexOf(dateArr[0]);
+        }
       } else {
         start = 0;
         end = 7;
@@ -220,9 +252,10 @@ class BuySellWeeklyChart extends Component {
           ...this.state,
           buySellData: true,
         });
+        var categories;
         if (limit) {
           const chartData = dataPreprocess(result);
-          var categories = Object.keys(chartData[0]).slice(0, 7).reverse();
+          categories = Object.keys(chartData[0]).slice(0, 7).reverse();
           var buyData = Object.values(chartData[0]).slice(0, 7).reverse();
           var sellData = Object.values(chartData[1]).slice(0, 7).reverse();
 
@@ -254,18 +287,25 @@ class BuySellWeeklyChart extends Component {
         } else {
           const chartData = dataPreprocess(result);
           const dateArr = Object.keys(chartData[0]);
-          var end =
-            dateArr.indexOf(period[0]) != -1
-              ? dateArr.indexOf(period[0]) + 1
-              : dateArr.indexOf(dateArr[dateArr.length - 1]) + 1;
-          var start =
-            dateArr.indexOf(period[1]) != -1
-              ? dateArr.indexOf(period[1])
-              : dateArr.indexOf(dateArr[0]);
 
-          var categories = Object.keys(chartData[0])
-            .slice(start, end)
-            .reverse();
+          if (
+            dateArr.indexOf(period[0]) === -1 &&
+            dateArr.indexOf(period[1]) === -1
+          ) {
+            end = -1;
+            start = -1;
+          } else {
+            var end =
+              dateArr.indexOf(period[0]) !== -1
+                ? dateArr.indexOf(period[0]) + 1
+                : dateArr.indexOf(dateArr[dateArr.length - 1]) + 1;
+            var start =
+              dateArr.indexOf(period[1]) !== -1
+                ? dateArr.indexOf(period[1])
+                : dateArr.indexOf(dateArr[0]);
+          }
+
+          categories = Object.keys(chartData[0]).slice(start, end).reverse();
           var buyData = Object.values(chartData[0]).slice(start, end).reverse();
           var sellData = Object.values(chartData[1])
             .slice(start, end)
@@ -301,6 +341,37 @@ class BuySellWeeklyChart extends Component {
       });
   };
 
+  handleSelect(item) {
+    this.setState({
+      ...this.state,
+      ranges: [item.selection],
+    });
+  }
+
+  showCalender() {
+    this.setState({
+      ...this.state,
+      showCalender: !this.state.showCalender,
+    });
+  }
+
+  setRange() {
+    var period = [];
+    period[0] = addDays(this.state.ranges[0].startDate, 1);
+    period[1] = addDays(this.state.ranges[0].endDate, 1);
+    console.log(period);
+    this.setState(
+      {
+        ...this.state,
+        showCalender: false,
+        dropdownItem: 'Select Month',
+      },
+      () => {
+        this.setData(period);
+      }
+    );
+  }
+
   componentDidMount() {
     this.fetchBuySellDataWeekly(11000);
   }
@@ -310,12 +381,38 @@ class BuySellWeeklyChart extends Component {
       <div>
         {this.state.buySellData ? (
           <>
-            <DropDownMenu
-              dropdownOpen={this.state.dropdownOpen}
-              dropdownItem={this.state.dropdownItem}
-              toggle={this.toggle}
-              selectItem={this.selectItem}
-            />
+            <div>
+              {this.state.data[0] ? (
+                this.state.showCalender ? (
+                  <Button onClick={this.setRange}>Set Range</Button>
+                ) : (
+                  <Button onClick={this.showCalender}>Select Range</Button>
+                )
+              ) : (
+                <></>
+              )}
+
+              <DropDownMenu
+                dropdownOpen={this.state.dropdownOpen}
+                dropdownItem={this.state.dropdownItem}
+                toggle={this.toggle}
+                selectItem={this.selectItem}
+              />
+              {this.state.showCalender ? (
+                <div style={{ zIndex: '1', position: 'absolute' }}>
+                  <DateRangePicker
+                    onChange={(item) => this.handleSelect(item)}
+                    showSelectionPreview={true}
+                    moveRangeOnFirstSelection={false}
+                    ranges={this.state.ranges}
+                    direction='horizontal'
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+
             <div className='row'>
               <div className='mixed-chart' style={{ content: 'overflow' }}>
                 <ReactApexChart
