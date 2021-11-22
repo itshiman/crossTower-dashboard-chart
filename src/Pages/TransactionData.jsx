@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardBody } from 'reactstrap';
 import BuySellWeeklyChart from '../components/BuySellWeekly';
 import DepositChart from '../components/DepositWeekly';
-import NewUser from '../components/NewUser';
+import NewUsers from '../components/NewUsers';
 
 function TransactionData() {
   return (
@@ -41,7 +41,7 @@ function TransactionData() {
             marginRight: '10px',
             marginTop: '10px',
           }}>
-          <CardBody>{/* <NewUser /> */}</CardBody>
+          <CardBody><NewUsers /></CardBody>
         </Card>
       </div>
     </div>
