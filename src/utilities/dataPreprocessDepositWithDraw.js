@@ -3,7 +3,7 @@ const split = (date) => {
 };
 
 const dataPreprocess = (depositData, withdrawData) => {
-  if (depositData.data) {
+  if (depositData.data && withdrawData.data) {
     var depositDataArr = depositData.data.data;
     var withdrawDataArr = withdrawData.data.data;
     // console.log(depositDataArr);

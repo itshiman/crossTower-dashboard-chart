@@ -1,9 +1,8 @@
 import React from 'react';
 import { Card, CardBody } from 'reactstrap';
-import BuySellMonthlyChart from '../components/BuySellMonthly';
 import BuySellWeeklyChart from '../components/BuySellWeekly';
 import DepositChart from '../components/DepositWeekly';
-import DepositChartMonthly from '../components/DepositWithdrawMonthly';
+import NewUser from '../components/NewUser';
 
 function TransactionData() {
   return (
@@ -42,9 +41,7 @@ function TransactionData() {
             marginRight: '10px',
             marginTop: '10px',
           }}>
-          <CardBody>
-            <DepositChartMonthly />
-          </CardBody>
+          <CardBody>{/* <NewUser /> */}</CardBody>
         </Card>
       </div>
     </div>
