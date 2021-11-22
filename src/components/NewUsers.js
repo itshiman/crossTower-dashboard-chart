@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import DataPreprocessNewUsers from "../utilities/DataPreprocessNewUsers";
+import React, { Component } from 'react';
+import DataPreprocessNewUsers from '../utilities/DataPreprocessNewUsers';
 import ReactApexChart from 'react-apexcharts';
 import DropDownMenu from './DropDownMenu';
 import dateConverter from '../utilities/dateConverter';
@@ -21,7 +21,7 @@ class NewUsers extends Component {
 
     this.state = {
       dropdownOpen: false,
-      dropdownItem: "Past 7 Days",
+      dropdownItem: 'Past 7 Days',
       buySellData: false,
       data: [],
 
@@ -30,27 +30,27 @@ class NewUsers extends Component {
         {
           startDate: new Date(),
           endDate: new Date(),
-          key: "selection",
+          key: 'selection',
         },
       ],
       series: [
         {
-          name: "KYC/BANK Approved",
+          name: 'KYC/BANK Approved',
           data: [],
         },
         {
-          name: "BANK Approved",
+          name: 'BANK Approved',
           data: [],
         },
       ],
       options: {
         chart: {
-          type: "line",
+          type: 'line',
           height: 350,
 
           dropShadow: {
             enabled: true,
-            color: "#77B6EA",
+            color: '#77B6EA',
             top: 0,
             left: 0,
             blur: 10,
@@ -73,19 +73,19 @@ class NewUsers extends Component {
           },
 
           stroke: {
-            curve: "smooth",
+            curve: 'smooth',
           },
           zoom: {
             enabled: true,
-            type: "y",
+            type: 'y',
             autoScaleXaxis: false,
             zoomedArea: {
               fill: {
-                color: "#90CAF9",
+                color: '#90CAF9',
                 opacity: 0.4,
               },
               stroke: {
-                color: "#0D47A1",
+                color: '#0D47A1',
                 opacity: 0.4,
                 width: 1,
               },
@@ -98,7 +98,7 @@ class NewUsers extends Component {
             breakpoint: 480,
             options: {
               legend: {
-                position: "bottom",
+                position: 'bottom',
                 offsetX: -10,
                 offsetY: 0,
               },
@@ -109,18 +109,18 @@ class NewUsers extends Component {
           width: 3,
         },
         title: {
-          text: "New Users Chart for Last 7 Days",
+          text: 'New Users Chart for Last 7 Days',
         },
         xaxis: {
-          type: "datetime",
+          type: 'datetime',
           categories: [],
         },
         fill: {
           opacity: 1,
         },
         legend: {
-          position: "top",
-          horizontalAlign: "left",
+          position: 'top',
+          horizontalAlign: 'left',
           offsetX: 40,
         },
       },
@@ -143,7 +143,7 @@ class NewUsers extends Component {
           dropdownItem: item,
         },
         () => {
-          if (item === "Past 7 Days") {
+          if (item === 'Past 7 Days') {
             this.setData();
           } else {
             var period = dateConverter(item);
@@ -157,15 +157,15 @@ class NewUsers extends Component {
   setData(period) {
     if (this.state.data[0]) {
       const chartData = this.state.data;
-      var start = "";
-      var end = "";
+      var start = '';
+      var end = '';
 
       if (period) {
         period[0] = new Date(period[0]);
         period[1] = new Date(period[1]);
 
-        period[0] = period[0].toISOString().split("T")[0];
-        period[1] = period[1].toISOString().split("T")[0];
+        period[0] = period[0].toISOString().split('T')[0];
+        period[1] = period[1].toISOString().split('T')[0];
 
         const dateArr = Object.keys(chartData[0]);
 
@@ -198,11 +198,11 @@ class NewUsers extends Component {
         ...this.state,
         series: [
           {
-            name: "kyc Bank Approved",
+            name: 'kyc Bank Approved',
             data: KycBankData,
           },
           {
-            name: "Bank Approved",
+            name: 'Bank Approved',
             data: BankData,
           },
         ],
@@ -213,7 +213,7 @@ class NewUsers extends Component {
               text: `New Users Chart for ${this.state.dropdownItem}`,
             },
             xaxis: {
-              type: "datetime",
+              type: 'datetime',
               categories: categories,
             },
           },
@@ -226,24 +226,25 @@ class NewUsers extends Component {
           buySellData: false,
         },
         () => {
-          this.fetchNewusers("", period);
+          this.fetchNewusers('', period);
         }
       );
     }
   }
 
-  fetchNewusers = (limit = "", period) => {
-    var url = "";
+  fetchNewusers = (limit = ' ', period) => {
+    var url = '';
     if (limit) {
       url = `https://api.crosstower.in/admin/user-list?pagination_type=page&page=1&limit=${limit}`;
     } else {
-      url = `https://api.crosstower.in/admin/user-list?pagination_type=page&page=1&limit=`;
+      url =
+        'https://api.crosstower.in/admin/user-list?pagination_type=page&page=1&limit=110000';
     }
     const token =
-      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdG8rcmVwb3J0QGNyb3NzdG93ZXIuaW4iLCJBdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiQURNSU4ifV0sImlhdCI6MTYzMzk3NzUxNywiZXhwIjoxNzYwMjE5OTgxfQ.WpF1uV7dBHQRdz0z2B5i60-4zwWuX7Ezo7H-tcR3wIl7A8czZv0sm3aubpX3PIuFzb3w5Opc75x0FKI9jL0Gew";
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdG8rcmVwb3J0QGNyb3NzdG93ZXIuaW4iLCJBdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiQURNSU4ifV0sImlhdCI6MTYzMzk3NzUxNywiZXhwIjoxNzYwMjE5OTgxfQ.WpF1uV7dBHQRdz0z2B5i60-4zwWuX7Ezo7H-tcR3wIl7A8czZv0sm3aubpX3PIuFzb3w5Opc75x0FKI9jL0Gew';
     fetch(url, {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .then((response) => response.json())
@@ -263,11 +264,11 @@ class NewUsers extends Component {
             ...this.state,
             series: [
               {
-                name: "kyc Bank Approved",
+                name: 'kyc Bank Approved',
                 data: KycBankData,
               },
               {
-                name: "Bank Approved",
+                name: 'Bank Approved',
                 data: BankData,
               },
             ],
@@ -278,7 +279,7 @@ class NewUsers extends Component {
                   text: `New Users Chart for ${this.state.dropdownItem}`,
                 },
                 xaxis: {
-                  type: "datetime",
+                  type: 'datetime',
                   categories: categories,
                 },
               },
@@ -288,7 +289,6 @@ class NewUsers extends Component {
           const chartData = DataPreprocessNewUsers(result);
           console.log(chartData);
           const dateArr = Object.keys(chartData[0]);
-
 
           if (
             dateArr.indexOf(period[0]) === -1 &&
@@ -308,7 +308,9 @@ class NewUsers extends Component {
           }
 
           categories = Object.keys(chartData[0]).slice(start, end).reverse();
-          var KycBankData = Object.values(chartData[0]).slice(start, end).reverse();
+          var KycBankData = Object.values(chartData[0])
+            .slice(start, end)
+            .reverse();
           var BankData = Object.values(chartData[1])
             .slice(start, end)
             .reverse();
@@ -317,11 +319,11 @@ class NewUsers extends Component {
             ...this.state,
             series: [
               {
-                name: "kyc Bank Approved",
+                name: 'kyc Bank Approved',
                 data: KycBankData,
               },
               {
-                name: "Bank Approved",
+                name: 'Bank Approved',
                 data: BankData,
               },
             ],
@@ -332,7 +334,7 @@ class NewUsers extends Component {
                   text: `Buy Sell Chart for ${this.state.dropdownItem}`,
                 },
                 xaxis: {
-                  type: "datetime",
+                  type: 'datetime',
                   categories: categories,
                 },
               },
@@ -350,6 +352,13 @@ class NewUsers extends Component {
     });
   }
 
+  handleSelect(item) {
+    this.setState({
+      ...this.state,
+      ranges: [item.selection],
+    });
+  }
+
   setRange() {
     var period = [];
     period[0] = addDays(this.state.ranges[0].startDate, 1);
@@ -359,7 +368,7 @@ class NewUsers extends Component {
       {
         ...this.state,
         showCalender: false,
-        dropdownItem: "Select Month",
+        dropdownItem: 'Select Month',
       },
       () => {
         this.setData(period);
@@ -394,13 +403,13 @@ class NewUsers extends Component {
                 selectItem={this.selectItem}
               />
               {this.state.showCalender ? (
-                <div style={{ zIndex: "1", position: "absolute" }}>
+                <div style={{ zIndex: '1', position: 'absolute' }}>
                   <DateRangePicker
                     onChange={(item) => this.handleSelect(item)}
                     showSelectionPreview={true}
                     moveRangeOnFirstSelection={false}
                     ranges={this.state.ranges}
-                    direction="horizontal"
+                    direction='horizontal'
                   />
                 </div>
               ) : (
@@ -408,24 +417,24 @@ class NewUsers extends Component {
               )}
             </div>
 
-            <div className="row">
-              <div className="mixed-chart" style={{ content: "overflow" }}>
+            <div className='row'>
+              <div className='mixed-chart' style={{ content: 'overflow' }}>
                 <ReactApexChart
                   options={this.state.options}
                   series={this.state.series}
-                  type="line"
+                  type='line'
                   toolbar={{ show: true }}
-                  height="400px"
+                  height='400px'
                 />
               </div>
             </div>
           </>
         ) : (
-          <div style={{ height: "400px", padding: "120px" }}>
-            <div className=" d-flex justify-content-center">
-              <Spinner animation="border" role="status" aria-hidden="true" />
+          <div style={{ height: '400px', padding: '120px' }}>
+            <div className=' d-flex justify-content-center'>
+              <Spinner animation='border' role='status' aria-hidden='true' />
             </div>
-            <div className=" d-flex justify-content-center">
+            <div className=' d-flex justify-content-center'>
               <span>
                 Loading Buy Sell Chart for {this.state.dropdownItem}...
               </span>
