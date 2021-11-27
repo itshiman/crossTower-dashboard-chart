@@ -9,6 +9,10 @@ const dataPreprocess = (data) => {
 
     dataArr.forEach((item) => {
       var key = '';
+      key = split(item.order_time);
+      res[0][key] ? (res[0][key] = res[0][key]) : (res[0][key] = 0);
+      res[1][key] ? (res[1][key] = res[1][key]) : (res[1][key] = 0);
+
       if (item.side === 'buy') {
         key = split(item.order_time);
         res[0][key] ? (res[0][key] = res[0][key] + 1) : (res[0][key] = 1);

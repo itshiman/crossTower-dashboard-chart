@@ -359,7 +359,7 @@ class BuySellWeeklyChart extends Component {
     var period = [];
     period[0] = addDays(this.state.ranges[0].startDate, 1);
     period[1] = addDays(this.state.ranges[0].endDate, 1);
-    console.log(period);
+
     this.setState(
       {
         ...this.state,

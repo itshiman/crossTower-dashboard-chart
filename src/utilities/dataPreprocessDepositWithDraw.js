@@ -13,12 +13,14 @@ const dataPreprocess = (depositData, withdrawData) => {
       var key = '';
       key = split(item.transaction_time);
       res[0][key] ? (res[0][key] = res[0][key] + 1) : (res[0][key] = 1);
+      res[1][key] ? (res[1][key] = res[1][key]) : (res[1][key] = 0);
     });
 
     withdrawDataArr.forEach((item) => {
       var key = '';
       key = split(item.transaction_time);
       res[1][key] ? (res[1][key] = res[1][key] + 1) : (res[1][key] = 1);
+      res[0][key] ? (res[0][key] = res[0][key]) : (res[0][key] = 0);
     });
 
     return res;

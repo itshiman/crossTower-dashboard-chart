@@ -236,22 +236,17 @@ class DepositChart extends Component {
     var depositData = {};
     var withDrawData = {};
     var url = '';
-    if (limit) {
-      url = `https://api.crosstower.in/transaction/admin/fiat/list?pagination_type=page&pageSize=50&limit=&transaction_type=DEPOSIT,`;
-    } else {
-      url =
-        'https://api.crosstower.in/transaction/admin/fiat/list?pagination_type=page&pageSize=50&limit=&transaction_type=DEPOSIT';
-    }
+
+    url =
+      'https://api.crosstower.in/transaction/admin/fiat/list?pagination_type=page&pageSize=50&limit=&transaction_type=DEPOSIT';
+
     const token =
       'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdG8rcmVwb3J0QGNyb3NzdG93ZXIuaW4iLCJBdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiQURNSU4ifV0sImlhdCI6MTYzMzk3NzUxNywiZXhwIjoxNzYwMjE5OTgxfQ.WpF1uV7dBHQRdz0z2B5i60-4zwWuX7Ezo7H-tcR3wIl7A8czZv0sm3aubpX3PIuFzb3w5Opc75x0FKI9jL0Gew';
-    fetch(
-      'https://api.crosstower.in/transaction/admin/fiat/list?pagination_type=page&pageSize=50&limit=&transaction_type=DEPOSIT',
-      {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      }
-    )
+    fetch(url, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    })
       .then((response) => response.json())
       .then((result) => {
         depositData = result;
@@ -271,39 +266,12 @@ class DepositChart extends Component {
               buySellData: true,
             });
             var categories;
+            const chartData = dataPreprocess(depositData, withDrawData);
             if (limit) {
-              const chartData = dataPreprocess(depositData, withDrawData);
               categories = Object.keys(chartData[0]).slice(0, 7).reverse();
               var buyData = Object.values(chartData[0]).slice(0, 7).reverse();
               var sellData = Object.values(chartData[1]).slice(0, 7).reverse();
-
-              this.setState({
-                ...this.state,
-                series: [
-                  {
-                    name: 'Deposit',
-                    data: buyData,
-                  },
-                  {
-                    name: 'Withdraw',
-                    data: sellData,
-                  },
-                ],
-                options: {
-                  ...this.state.options,
-                  ...{
-                    title: {
-                      text: `Deposit Withdraw Chart for ${this.state.dropdownItem}`,
-                    },
-                    xaxis: {
-                      type: 'datetime',
-                      categories: categories,
-                    },
-                  },
-                },
-              });
             } else {
-              const chartData = dataPreprocess(depositData, withDrawData);
               const dateArr = Object.keys(chartData[0]);
 
               if (
@@ -332,34 +300,34 @@ class DepositChart extends Component {
               var sellData = Object.values(chartData[1])
                 .slice(start, end)
                 .reverse();
-
-              this.setState({
-                ...this.state,
-                series: [
-                  {
-                    name: 'Deposit',
-                    data: buyData,
+            }
+            this.setState({
+              ...this.state,
+              buySellData: true,
+              series: [
+                {
+                  name: 'Deposit',
+                  data: buyData,
+                },
+                {
+                  name: 'Withdraw',
+                  data: sellData,
+                },
+              ],
+              options: {
+                ...this.state.options,
+                ...{
+                  title: {
+                    text: `Deposit Withdraw Chart for ${this.state.dropdownItem}`,
                   },
-                  {
-                    name: 'Withdraw',
-                    data: sellData,
-                  },
-                ],
-                options: {
-                  ...this.state.options,
-                  ...{
-                    title: {
-                      text: `Deposit Withdraw Chart for ${this.state.dropdownItem}`,
-                    },
-                    xaxis: {
-                      type: 'datetime',
-                      categories: categories,
-                    },
+                  xaxis: {
+                    type: 'datetime',
+                    categories: categories,
                   },
                 },
-                data: chartData,
-              });
-            }
+              },
+              data: chartData,
+            });
           });
       });
   };
@@ -382,7 +350,7 @@ class DepositChart extends Component {
     var period = [];
     period[0] = addDays(this.state.ranges[0].startDate, 1);
     period[1] = addDays(this.state.ranges[0].endDate, 1);
-    console.log(period);
+
     this.setState(
       {
         ...this.state,
